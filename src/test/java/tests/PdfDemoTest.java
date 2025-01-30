@@ -40,10 +40,10 @@ public class PdfDemoTest {
 
     @Test
     public void test() throws IOException {
-    	Eyes eyes = new Eyes(runner);
-    	eyes.setBatch(batch);
+        Eyes eyes = new Eyes(runner);
+        eyes.setBatch(batch);
         eyes.setMatchLevel(MatchLevel.STRICT); // Default match level for all tests
-    	
+
         // Set file to whatever you want to test. Next steps: parameterize?
         File file = new File("src/test/resources/INV12345.pdf");
 
@@ -61,8 +61,8 @@ public class PdfDemoTest {
                 BufferedImage bim = pdfRenderer.renderImage(pageNum - 1);
                 if (!eyes.getIsOpen())
                     eyes.open("Pdfs Java", "Test PDF", new RectangleSize(bim.getWidth(), bim.getHeight()));
-                
-                
+
+
                 eyes.check(String.format("Page-%s", pageNum), Target.image(bim));
                 bim.getGraphics().dispose();
                 bim.flush();
@@ -73,10 +73,9 @@ public class PdfDemoTest {
             // throw an exception when there are differences
             TestResults testResults = eyes.close(false);
             System.out.println(testResults.toString());
-        } catch(Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
-        }
-        finally {
+        } finally {
             try {
                 if (doc != null)
                     doc.close();
@@ -89,17 +88,17 @@ public class PdfDemoTest {
     }
     
     @AfterClass
-	public static void oneTimeTearDown() {
-		// Close the batch; which will send notifications
+    public static void oneTimeTearDown() {
+        // Close the batch; which will send notifications
         BatchClose batchClose = new BatchClose();
-		batchClose.setBatchId(Arrays.asList(new String[]{batch.getId()})).close();
-		
-		// Get the final test results, while closing the runner
-		// Setting the shouldThrowException parameter to: true will
+        batchClose.setBatchId(Arrays.asList(new String[]{batch.getId()})).close();
+
+        // Get the final test results, while closing the runner
+        // Setting the shouldThrowException parameter to: true will
         // throw an exception when there are differences
-		TestResultsSummary allTestResults = runner.getAllTestResults(false);
-		
-		// Print Runner Test Results
-		System.out.println(allTestResults);
-	}
+        TestResultsSummary allTestResults = runner.getAllTestResults(false);
+
+        // Print Runner Test Results
+        System.out.println(allTestResults);
+    }
 }
