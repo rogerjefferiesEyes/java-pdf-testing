@@ -39,10 +39,9 @@ import com.applitools.eyes.images.ImageRunner;
 import com.applitools.eyes.images.Target;
 
 public class PdfWebLinkTest {
-	
 	private WebDriver driver;
 	private static ImageRunner runner = new ImageRunner();
-    private static BatchInfo batch = new BatchInfo("PDF Tests");
+	private static BatchInfo batch = new BatchInfo("PDF Tests");
     private Eyes eyes;
     private String pdfFilePath = "";
     private boolean isDeletePdfFileAfterTest = false;
