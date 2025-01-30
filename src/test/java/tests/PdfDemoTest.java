@@ -29,7 +29,7 @@ import com.applitools.eyes.images.ImageRunner;
 import com.applitools.eyes.images.Target;
 
 public class PdfDemoTest {
-	private static ImageRunner runner = new ImageRunner();
+    private static ImageRunner runner = new ImageRunner();
     private static BatchInfo batch = new BatchInfo("PDF Tests");
     private Eyes eyes;
     

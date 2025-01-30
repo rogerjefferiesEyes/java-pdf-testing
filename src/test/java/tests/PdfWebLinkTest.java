@@ -39,45 +39,45 @@ import com.applitools.eyes.images.ImageRunner;
 import com.applitools.eyes.images.Target;
 
 public class PdfWebLinkTest {
-	private WebDriver driver;
-	private static ImageRunner runner = new ImageRunner();
-	private static BatchInfo batch = new BatchInfo("PDF Tests");
+    private WebDriver driver;
+    private static ImageRunner runner = new ImageRunner();
+    private static BatchInfo batch = new BatchInfo("PDF Tests");
     private Eyes eyes;
     private String pdfFilePath = "";
     private boolean isDeletePdfFileAfterTest = false;
-	
-	@Before
-	public void setUp() {
-        ChromeOptions options = new ChromeOptions();
-		Map<String, Object> prefs = new HashMap<String, Object>();
-		prefs.put("download.prompt_for_download", false);
-		prefs.put("download.default_directory",System.getProperty("user.home")); 
-		options.setExperimentalOption("prefs", prefs);
-		options.addArguments("--test-type");
-		options.addArguments("--disable-extensions");
-		driver = new ChromeDriver(options);
-		
-		eyes = new Eyes(runner);
-		batch.setNotifyOnCompletion(true);
-        eyes.setBatch(batch);
-	}
 
-	@Test
-	public void testPdfWebLink() throws MalformedURLException, IOException {
-		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
-    	driver.get("https://www.learningcontainer.com/download/sample-pdf-file-for-testing/");
-    	
-    	String pdfUrl = driver.findElement(By.xpath("//*[@id=\"post-1566\"]/div/div/div/div[2]/div/a")).getAttribute("data-downloadurl");
-    	
-    	System.out.println(pdfUrl);
-    	
-    	driver.get(pdfUrl);
-    	
+    @Before
+    public void setUp() {
+        ChromeOptions options = new ChromeOptions();
+        Map<String, Object> prefs = new HashMap<String, Object>();
+        prefs.put("download.prompt_for_download", false);
+        prefs.put("download.default_directory", System.getProperty("user.home"));
+        options.setExperimentalOption("prefs", prefs);
+        options.addArguments("--test-type");
+        options.addArguments("--disable-extensions");
+        driver = new ChromeDriver(options);
+
+        eyes = new Eyes(runner);
+        batch.setNotifyOnCompletion(true);
+        eyes.setBatch(batch);
+    }
+
+    @Test
+    public void testPdfWebLink() throws MalformedURLException, IOException {
+        driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+        driver.get("https://www.learningcontainer.com/download/sample-pdf-file-for-testing/");
+
+        String pdfUrl = driver.findElement(By.xpath("//*[@id=\"post-1566\"]/div/div/div/div[2]/div/a")).getAttribute("data-downloadurl");
+
+        System.out.println(pdfUrl);
+
+        driver.get(pdfUrl);
+
         // Set file to the downloaded
-    	pdfFilePath = System.getProperty("user.home") + "/sample-pdf-file.pdf";
-    	File file = new File(pdfFilePath);
+        pdfFilePath = System.getProperty("user.home") + "/sample-pdf-file.pdf";
+        File file = new File(pdfFilePath);
         PDDocument doc = PDDocument.load(file); // will throw here if PDF malformed or empty file
-        
+
         PDFRenderer pdfRenderer = new PDFRenderer(doc);
         int maxPage = doc.getNumberOfPages();
         System.out.println("Numpages: " + doc.getNumberOfPages());
@@ -95,7 +95,7 @@ public class PdfWebLinkTest {
                 bim.getGraphics().dispose();
                 bim.flush();
             }
-            
+
             // End visual UI testing.
             // Close Eyes Test
             // Setting the shouldThrowException parameter to: true will
@@ -103,11 +103,10 @@ public class PdfWebLinkTest {
             TestResults testResults = eyes.close(false);
             System.out.println(testResults);
 
-            
-        } catch(Exception ex){
-        	ex.printStackTrace();
-        }
-        finally {
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
             try {
                 if (doc != null)
                     doc.close();
@@ -117,29 +116,29 @@ public class PdfWebLinkTest {
             // If the test was aborted before eyes.close was called, ends the test as aborted.
             eyes.abortIfNotClosed();
         }
-	}
-	
-	@After
-	public void tearDown() throws IOException {
-		if(isDeletePdfFileAfterTest) {
-			Path filePath = Paths.get(pdfFilePath);
+    }
+
+    @After
+    public void tearDown() throws IOException {
+        if (isDeletePdfFileAfterTest) {
+            Path filePath = Paths.get(pdfFilePath);
             Files.delete(filePath);
-		}
-		driver.quit();
-	}
-	
-	@AfterClass
-	public static void tearDownEyes() {
-		// Close the batch; which will send notifications
+        }
+        driver.quit();
+    }
+
+    @AfterClass
+    public static void tearDownEyes() {
+        // Close the batch; which will send notifications
         BatchClose batchClose = new BatchClose();
-		batchClose.setBatchId(Arrays.asList(new String[]{batch.getId()})).close();
-		
-		// Get the final test results, while closing the runner
-		// Setting the shouldThrowException parameter to: true will
+        batchClose.setBatchId(Arrays.asList(new String[]{batch.getId()})).close();
+
+        // Get the final test results, while closing the runner
+        // Setting the shouldThrowException parameter to: true will
         // throw an exception when there are differences
-		TestResultsSummary allTestResults = runner.getAllTestResults(false);
-		
-		// Print Runner Test Results
-		System.out.println(allTestResults);
-	}
+        TestResultsSummary allTestResults = runner.getAllTestResults(false);
+
+        // Print Runner Test Results
+        System.out.println(allTestResults);
+    }
 }
